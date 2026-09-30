@@ -23,4 +23,4 @@ Run `ngrok http 5000`, open the https link on your phone in Chrome. Mic and noti
 பண்ணை tab > tick DEMO. Shows a storm scenario, sends a [DEMO] Telegram alert. Say clearly it is a demo.
 
 ## Hardware (optional)
-See esp32/ungal_vivasaayi.ino. Once sensors send data, soil moisture switches from "கணிப்பு" (modelled) to "சென்சார்".
+See esp32_ungal_vivasaayi.ino. Once sensors send data, soil moisture switches from "கணிப்பு" (modelled) to "சென்சார்".

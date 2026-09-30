@@ -6,7 +6,13 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 ENV = os.path.join(BASE, ".env"); DB = os.path.join(BASE, "farm.db")
 load_dotenv(ENV, encoding="utf-8-sig")
 MODELS = [os.getenv("GEMINI_MODEL", "gemini-2.5-flash").strip(), "gemini-2.5-flash-lite", "gemini-2.0-flash", "gemini-flash-latest"]
-app = Flask(__name__, static_folder="static", static_url_path="")
+app = Flask(__name__, static_folder=None)
+PUB = {"index.html", "manifest.json", "sw.js", "icon-192.png", "icon-512.png"}
+def pub(name):
+    for d in (BASE, os.path.join(BASE, "static")):
+        p = os.path.join(d, name)
+        if os.path.isfile(p): return send_file(p)
+    return "Not found", 404
 state = {"pump": False, "zones": None, "seen": 0, "demo": False, "last_alert": ("ok", 0)}
 cache = {}
 
@@ -157,7 +163,9 @@ def rule_advice(age, w):
 
 # ---------- routes ----------
 @app.get("/")
-def index(): return app.send_static_file("index.html")
+def index(): return pub("index.html")
+@app.get("/<name>")
+def pubfile(name): return pub(name) if name in PUB else ("Not found", 404)
 @app.get("/api/status")
 def status(): return jsonify(key=bool(key()), telegram=bool(os.environ.get("TELEGRAM_CHAT_ID")), demo=state["demo"])
 @app.post("/api/setkey")
